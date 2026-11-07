@@ -1,0 +1,26 @@
+{
+ "name": "control-panel",
+ "title": "Plasma control box front (example)",
+ "width": 160, "height": 90, "thickness": 3,
+ "material": "alu_elox", "color": "elox_black",
+ "corner_radius": 3,
+ "remark": "Please deburr all edges.",
+ "engrave_color": "engrave_pure_white",
+ "elements": [
+  {"type": "drill", "name": "m1", "x": 6,   "y": 6,  "d": 3.4, "countersink": "M3"},
+  {"type": "drill", "name": "m2", "x": 154, "y": 6,  "d": 3.4, "countersink": "M3"},
+  {"type": "drill", "name": "m3", "x": 154, "y": 84, "d": 3.4, "countersink": "M3"},
+  {"type": "drill", "name": "m4", "x": 6,   "y": 84, "d": 3.4, "countersink": "M3"},
+  {"type": "drill", "name": "estop", "x": 35, "y": 50, "d": 22.5},
+  {"type": "rect", "name": "power", "x": 80, "y": 52, "w": 19.2, "h": 12.9, "r": 0.5},
+  {"type": "rect", "name": "usb", "x": 118, "y": 52, "w": 9.4, "h": 3.6, "r": 1.0},
+  {"type": "drill", "name": "led", "x": 142, "y": 52, "d": 5},
+  {"type": "cavity", "name": "title_recess", "shape": "rect", "x": 80, "y": 77, "w": 70, "h": 11, "r": 1.5, "depth": 0.5, "side": "front"},
+  {"type": "contour", "name": "vent", "dxf": "vent.dxf", "x": 118, "y": 22},
+  {"type": "text", "name": "t_title", "x": 80, "y": 75, "text": "PLASMA CONTROL", "size": 5},
+  {"type": "text", "name": "t_estop", "x": 35, "y": 32, "text": "E-STOP", "size": 3.5},
+  {"type": "text", "name": "t_power", "x": 80, "y": 40, "text": "POWER", "size": 3.5},
+  {"type": "text", "name": "t_usb", "x": 118, "y": 40, "text": "USB", "size": 3.5},
+  {"type": "text", "name": "t_led", "x": 142, "y": 40, "text": "READY", "size": 3.5}
+ ]
+}

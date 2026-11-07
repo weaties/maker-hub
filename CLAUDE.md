@@ -2,7 +2,7 @@
 
 The tooling home for all of DW's modelling and fabrication: 3D-printed parts, Shaper Origin cuts, the
 CNC plasma table (built with Stefan), the maker space being set up in the office, and parts for the boat.
-CAD is **SolidCraft** (open-source, headless CLI + MCP), driven by scripts, so every part rebuilds from text.
+Panels are ordered from Front Panel Express (FPE). CAD is **SolidCraft** (open-source, headless CLI + MCP), driven by scripts, so every part rebuilds from text.
 
 ## Repos: this hub holds tools, not projects
 | Path | Repo | Notes |
@@ -29,11 +29,13 @@ projects/<repo>/<area>/<slug>/   one folder per part (plasma-cutter: parts/<slug
   out/                       renders, snapshots, measurements
   README.md                  ID, status, requirements, measured mating dims, log
 templates/part/              copy to start a part
+templates/fpe-panel/         copy to start a Front Panel Express panel (worked example)
 library/                     fits-and-fasteners.md, materials.md (calibrated numbers live here)
 tools/bin/solidcraft-cli     SolidCraft CLI (gitignored; tools/update-solidcraft.sh installs/updates)
 tools/drawing/drawing.py     view DXFs -> dimensioned drawing sheets
 tools/shaper/to_shaper_svg.py DXF -> Shaper Origin SVG (cut types by fill/stroke)
 tools/plasma/check_dxf.py    DXF checks for plasma (open contours, gaps, table size, small holes) + R12 copy
+tools/fpe/panel.py           panel.json -> Front Panel Designer script + SolidCraft model + DXF pair
 tools/dxf/dxfloops.py        shared loop/hole detection for the 2D tools
 tools/clone-projects.sh      clone/pull the project repos into projects/
 docs/upstream/               how to report to / contribute to SolidCraft; drafted issues
@@ -46,6 +48,7 @@ docs/upstream/               how to report to / contribute to SolidCraft; drafte
 | Getting a part onto the printer | `print-prep` |
 | Anything for the Shaper Origin | `shaper-cut` |
 | Plasma parts, DXFs for plasma, or the plasma table build | `plasma-cut` |
+| A machined panel to order from Front Panel Express | `front-panel` |
 | Renders, sections, drawings, a page to share | `drawings-and-renders` |
 | Anything for the boat or outdoors | `boat-parts` |
 
@@ -69,4 +72,5 @@ Their contribution rules (clean-room, draft-PR claims, `cargo xtask ci`) apply o
 - Shaper Origin: _TBD_ (generation; bits on hand: 1/4" & 1/8" assumed).
 - CNC plasma table: being built (JD's Garage Gen 2.0, 711 × 812 mm, ESP32). Not cutting yet; see `projects/plasma-cutter/README.md`.
 - SolidCraft desktop app: not installed (DMG from the GitHub releases). With it running, `solidcraft-cli mcp --connect` lets Claude drive the visible app.
-- Collaborator: Stefan (plasma table). GitHub handle: _TBD_.
+- Front Panel Designer 6.3.5 installed (`/Applications/FrontDesign.app`): runs the `.fpjs` scripts `tools/fpe/panel.py` writes.
+- People: Stefan (plasma table, built at his house; GitHub handle _TBD_), Clayton (owns a Shaper Origin), Kai (founder of Front Panel Express; introduced SolidCraft).

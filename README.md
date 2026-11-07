@@ -32,6 +32,7 @@ and the skills in `.claude/skills/`.
 | `tools/drawing/drawing.py` | dimensioned drawing sheets from a SolidCraft design (until SolidCraft ships drawings) |
 | `tools/shaper/to_shaper_svg.py` | DXF to Shaper Origin SVG with cut types |
 | `tools/plasma/check_dxf.py` | checks a DXF for plasma CAM and writes a clean R12 copy |
+| `tools/fpe/panel.py` | Front Panel Express: panel spec to an FPD script, a SolidCraft model and DXFs |
 | `tools/update-solidcraft.sh` | installs or updates SolidCraft |
 
 Contributing back to SolidCraft: [docs/upstream/](docs/upstream/).

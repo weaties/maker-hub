@@ -1,0 +1,9 @@
+{"commands":[
+ {"command":"sketch.create","params":{"plane":"XY","name":"Vent"}},
+ {"command":"sketch.slot.overall","params":{"p0":[-15,-8],"p1":[15,-8],"width":3}},
+ {"command":"sketch.slot.overall","params":{"p0":[-15,-4],"p1":[15,-4],"width":3}},
+ {"command":"sketch.slot.overall","params":{"p0":[-15,0],"p1":[15,0],"width":3}},
+ {"command":"sketch.slot.overall","params":{"p0":[-15,4],"p1":[15,4],"width":3}},
+ {"command":"sketch.slot.overall","params":{"p0":[-15,8],"p1":[15,8],"width":3}},
+ {"command":"sketch.export_dxf","params":{"sketch":"Vent","path":"vent.dxf"}}
+]}

@@ -22,9 +22,13 @@ installed release tag so its docs and skills match the binary.
 - Hub-side workarounds for upstream gaps (like `tools/drawing/drawing.py` until SolidCraft's
   Drawings milestone lands) stay in the hub; delete them once upstream covers it.
 
-## Drafts (not filed)
+## Drafts and filed issues
 
 | Draft | Status | Search done |
 |---|---|---|
-| [view-dxf-fov.md](view-dxf-fov.md): `file.export_view_dxf` rejects a camera without `fov` | ready for review | 2026-11-07, no match |
+| [view-dxf-fov.md](view-dxf-fov.md): `file.export_view_dxf` rejects a camera without `fov` | **filed 2026-11-07: [#13112](https://github.com/tangency-labs/solidcraft/issues/13112)** | 2026-11-07, no match |
 | PETG / ASA as built-in materials | better as a comment on #12982 (user material libraries) | 2026-11-07 |
+
+Not filed yet: `solid.emboss` gets much slower as a body gains features (one 3.5 mm label: 0.6 s on a
+bare 160 × 90 plate, 16.5 s after ~20 holes and cut-outs; a 14-letter label 66 s). Worked around in
+`tools/fpe/panel.py` by engraving before drilling. Needs a minimal repro before it's worth reporting.
