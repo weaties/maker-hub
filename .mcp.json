@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "solidcraft": {
+      "command": "sh",
+      "args": ["-c", "exec ./tools/bin/solidcraft-cli mcp --allow-path \"$PWD\""]
+    }
+  }
+}

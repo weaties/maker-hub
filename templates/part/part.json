@@ -1,0 +1,12 @@
+{"commands":[
+ {"command":"parameters.add","params":{"name":"L","expression":"80 mm","comment":"length, X"}},
+ {"command":"parameters.add","params":{"name":"W","expression":"50 mm","comment":"width, Y"}},
+ {"command":"parameters.add","params":{"name":"T","expression":"6 mm","comment":"thickness, Z"}},
+ {"command":"sketch.create","params":{"plane":"XY","name":"Outline"}},
+ {"command":"sketch.draw.dimensioned","params":{"command":"sketch.rectangle.center","params":{"center":[0,0],"corner":[40,25]},"dimensions":{"width":"L","height":"W"}}},
+ {"command":"sketch.constraint.coincident","params":{"a":"p5","b":"origin"}},
+ {"command":"sketch.finish","params":{}},
+ {"command":"solid.extrude","params":{"distance":"T","name":"Body","body_name":"Part"}},
+ {"command":"material.create","params":{"name":"PETG","density_g_cm3":1.27}},
+ {"command":"material.assign","params":{"bodies":["Part"],"material":"PETG"}}
+]}

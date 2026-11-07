@@ -1,0 +1,8 @@
+# Each project folder is its own repo (see projects/README.md)
+projects/*
+!projects/README.md
+# Third-party: SolidCraft fork clone and downloaded binaries (tools/update-solidcraft.sh restores them)
+tools/solidcraft/
+tools/bin/
+.DS_Store
+__pycache__/
