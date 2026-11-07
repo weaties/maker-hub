@@ -11,8 +11,8 @@ for row in "${REPOS[@]}"; do
   dest="$HUB/projects/$dir"
   if [[ -d "$dest/.git" ]]; then
     echo "== $dir: pull"; git -C "$dest" pull --ff-only
-  elif gh repo view "$repo" >/dev/null 2>&1; then
-    echo "== $dir: clone $repo"; gh repo clone "$repo" "$dest"
+  elif git ls-remote "https://github.com/$repo.git" >/dev/null 2>&1; then
+    echo "== $dir: clone $repo"; git clone "https://github.com/$repo.git" "$dest"
   else
     echo "== $dir: no access to $repo, skipped"
   fi

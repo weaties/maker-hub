@@ -15,6 +15,9 @@ for b in d['bodies']: print(f'  {b[\"name\"]:12} {b.get(\"volume_mm3\",0):10.1f}
 [[ -f print.json ]] && "$SC" run print.json --in "$NAME.sc" --quiet
 "$SC" snapshot "$NAME.sc" --out out/snap-iso.png --view iso --width 1200 --height 800 --no-grid --no-axes >/dev/null
 [[ "${1:-}" != "--fast" ]] && "$SC" render "$NAME.sc" --out out/render.png --width 1600 --height 1000 --progressive --samples 128 --overwrite >/dev/null
+# Bambu Lab: slice print/*.3mf for this Mac's printer (material/settings from slice.json; skipped
+# without Bambu Studio or with NO_SLICE=1)
+[[ -f print.json && -z "${NO_SLICE:-}" && -d "${BAMBU_STUDIO_APP:-/Applications/BambuStudio.app}" ]] && "$HUB/tools/bambu/slice.py" .
 [[ -f drawing.json ]] && uv run -q "$HUB/tools/drawing/drawing.py" drawing.json
 [[ -f shaper.json ]] && "$SC" run shaper.json --in "$NAME.sc" --quiet && for f in shaper/*.dxf; do uv run -q "$HUB/tools/shaper/to_shaper_svg.py" "$f"; done
 if [[ -f plasma.json ]]; then

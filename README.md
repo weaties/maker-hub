@@ -8,16 +8,17 @@ The projects live in their own repos, cloned into `projects/`:
 
 | Folder | Repo | What |
 |---|---|---|
-| `projects/personal/` | weaties/maker-projects (private) | boat, shop, electronics, home parts |
-| `projects/plasma-cutter/` | weaties/plasma-cutter (private) | JD's Garage Gen 2.0 CNC plasma table |
+| `projects/personal/` | weaties/maker-projects | boat, shop, electronics, home parts |
+| `projects/plasma-cutter/` | weaties/plasma-cutter | JD's Garage Gen 2.0 CNC plasma table |
 
 ## Set up on a new machine
 ```sh
-git clone git@github.com:weaties/maker-hub.git ~/src/solidcraft && cd ~/src/solidcraft
+git clone https://github.com/weaties/maker-hub.git ~/src/solidcraft && cd ~/src/solidcraft
 tools/update-solidcraft.sh      # SolidCraft CLI (checksum-verified) + source clone of the fork
 tools/clone-projects.sh         # the project repos you have access to
 ```
 Needs macOS, `gh`, `uv`, and `rsvg-convert` (`brew install librsvg`, for PDF/PNG drawings).
+For 3D printing on a Bambu Lab: Bambu Studio, with your printer selected once.
 
 ## Use
 ```sh
@@ -32,6 +33,7 @@ and the skills in `.claude/skills/`.
 | `tools/drawing/drawing.py` | dimensioned drawing sheets from a SolidCraft design (until SolidCraft ships drawings) |
 | `tools/shaper/to_shaper_svg.py` | DXF to Shaper Origin SVG with cut types |
 | `tools/plasma/check_dxf.py` | checks a DXF for plasma CAM and writes a clean R12 copy |
+| `tools/bambu/slice.py` | slices a part's 3MF files for your Bambu Lab printer (headless Bambu Studio) |
 | `tools/fpe/panel.py` | Front Panel Express: panel spec to an FPD script, a SolidCraft model and DXFs |
 | `tools/update-solidcraft.sh` | installs or updates SolidCraft |
 

@@ -21,14 +21,19 @@ mkdir -p "$HUB/tools/bin"
 cp "$tmp"/x/*/solidcraft-cli "$tmp"/x/*/solvecraft-cli "$HUB/tools/bin/"
 "$HUB/tools/bin/solidcraft-cli" --version
 
-# Source: a clone of your fork (origin) with tangency-labs as upstream, checked out at the release
-# tag so its docs/skills match the binary. Contribution branches are left alone.
+# Source: checked out at the release tag so its docs/skills match the binary. If you have a fork of
+# SolidCraft (or ask for one with SOLIDCRAFT_FORK=1) it's origin and tangency-labs is upstream, ready for
+# contributions; otherwise it's a plain clone of tangency-labs. Contribution branches are left alone.
 SRC="$HUB/tools/solidcraft"
-FORK="$(gh api user -q .login)/solidcraft"
 if [[ ! -d "$SRC/.git" ]]; then
-  gh repo view "$FORK" >/dev/null 2>&1 || gh repo fork "$REPO" --clone=false --default-branch-only
-  git clone --depth 50 "git@github.com:$FORK.git" "$SRC"
-  git -C "$SRC" remote add upstream "https://github.com/$REPO.git"
+  FORK="$(gh api user -q .login)/solidcraft"
+  if gh repo view "$FORK" >/dev/null 2>&1 || { [[ "${SOLIDCRAFT_FORK:-}" == 1 ]] && gh repo fork "$REPO" --clone=false --default-branch-only; }; then
+    git clone --depth 50 "https://github.com/$FORK.git" "$SRC"
+    git -C "$SRC" remote add upstream "https://github.com/$REPO.git"
+  else
+    git clone --depth 50 "https://github.com/$REPO.git" "$SRC"
+    git -C "$SRC" remote add upstream "https://github.com/$REPO.git"
+  fi
 fi
 git -C "$SRC" fetch --depth 50 --tags upstream
 if [[ -n "$(git -C "$SRC" status --porcelain)" ]] || git -C "$SRC" symbolic-ref -q HEAD >/dev/null; then
