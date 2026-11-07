@@ -20,7 +20,8 @@ A new project with its own collaborators gets its own repo; see `projects/README
 projects/<repo>/<area>/<slug>/   one folder per part (plasma-cutter: parts/<slug>/)
   <slug>.json                SOURCE OF TRUTH: SolidCraft command script
   build.sh                   regenerates everything below (finds the hub via .maker-hub)
-  <slug>.sc / .step          design (opens in the app) / neutral CAD
+  <slug>.sc                  design to open in the app (git-ignored: rebuilt each time, binary churn)
+  <slug>.step                neutral CAD (deterministic, committed)
   print.json  -> print/      oriented 3MF per body
   shaper.json -> shaper/     DXF + Shaper SVG
   plasma.json -> plasma/     DXF + checked R12 DXF

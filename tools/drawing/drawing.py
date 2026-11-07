@@ -46,6 +46,7 @@ from __future__ import annotations
 import base64
 import json
 import math
+import os
 import shutil
 import subprocess
 import sys
@@ -269,6 +270,7 @@ def main(spec_path: str):
     out_stem = base / spec.get("out", "out/drawing")
     out_stem.parent.mkdir(parents=True, exist_ok=True)
     have_rsvg = shutil.which("rsvg-convert")
+    env = {**os.environ, "SOURCE_DATE_EPOCH": "0"}  # reproducible PDFs: no creation timestamp churn in git
     with tempfile.TemporaryDirectory() as tmp:
         for n, sh in enumerate(spec["sheets"], 1):
             files = export_views(design, sh, Path(tmp))
@@ -283,7 +285,7 @@ def main(spec_path: str):
             svg.write_text(S.svg())
             print(svg)
             if have_rsvg:
-                subprocess.run(["rsvg-convert", "-f", "pdf", "-o", str(svg.with_suffix(".pdf")), str(svg)], check=True)
+                subprocess.run(["rsvg-convert", "-f", "pdf", "-o", str(svg.with_suffix(".pdf")), str(svg)], check=True, env=env)
                 subprocess.run(["rsvg-convert", "-w", "2400", "-b", "white", "-o", str(svg.with_suffix(".png")), str(svg)], check=True)
 
 
