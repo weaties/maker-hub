@@ -32,6 +32,10 @@ Spec (paths are relative to the spec file):
       {"view": "TOP", "note": "4x BOSS Ø6, PILOT Ø2.2", "at": [-30, 40], "to": [-39, 24.5]}
     ],
     "notes": ["GENERAL NOTE ONE", "..."], "notes_at": [15, 270],   # sheet mm
+    # optional: "units": "in" (spec level) labels dimensions in inches to the nearest 1/32
+    #   ("tolerance" sets the footer's general tolerance text); dims stay model mm.
+    # optional per view: "only": [bodies] shows just those bodies in that view (needs the
+    #   spec-level "bodies": [every body name]), so one sheet can lay out several parts.
     # a view may also take "label_dy" (sheet mm) to push its name below dimensions
     "image": {"path": "out/snap.png", "at": [300, 30], "width": 100}   # optional picture
   }]
@@ -81,8 +85,12 @@ def export_views(design: Path, sheet: dict, workdir: Path) -> dict[str, Path]:
         cmds.append({"command": "browser.visibility", "params": {"visible": False, "items": sheet["hide"]}})
     files = {}
     for v in sheet["views"]:
+        if v.get("only"):
+            cmds.append({"command": "browser.visibility", "params": {"visible": False, "items": sheet["_bodies"]}})
+            cmds.append({"command": "browser.visibility", "params": {"visible": True, "items": v["only"]}})
         yaw, pitch = CAMERAS[v["view"]]
-        out = workdir / f"{sheet['name']}-{v['name']}.dxf"
+        safe = "".join(ch if ch.isalnum() or ch in "-_" else "_" for ch in v["name"])
+        out = workdir / f"{sheet['name']}-{safe}.dxf"
         files[v["name"]] = out
         cmds.append({"command": "file.export_view_dxf", "params": {
             "camera": {"target": [0, 0, 0], "yaw": yaw, "pitch": pitch, "distance": 2000, "fov": 0},
@@ -111,6 +119,22 @@ def read_segments(path: Path):
             for (a, b) in zip(pts, pts[1:]):
                 segs.append((a[0], a[1], b[0], b[1], hidden))
     return segs
+
+
+def inch_label(mm: float) -> str:
+    """mm -> inches as a whole number and a fraction to the nearest 1/32 (e.g. 9 5/16), or
+    3 decimals when the value is not on a 1/32."""
+    x = mm / 25.4
+    n = round(x * 32)
+    if abs(x * 32 - n) > 0.05:
+        return f"{x:.3f}"
+    whole, frac = divmod(n, 32)
+    if frac == 0:
+        return f"{whole}"
+    num, den = frac, 32
+    while num % 2 == 0:
+        num, den = num // 2, den // 2
+    return f"{whole} {num}/{den}" if whole else f"{num}/{den}"
 
 
 class Sheet:
@@ -178,7 +202,7 @@ class Sheet:
         (ax, ay), (bx, by) = d["a"], d["b"]
         horiz = d.get("dir", "h") == "h"
         val = abs(bx - ax) if horiz else abs(by - ay)
-        label = d.get("text", f"{val:.2f}".rstrip("0").rstrip("."))
+        label = d.get("text", inch_label(val) if self.spec.get("units") == "in" else f"{val:.2f}".rstrip("0").rstrip("."))
         off = d.get("off", 8)  # sheet mm, sign picks the side (+ above / right)
         A, B = self.P(v, ax, ay), self.P(v, bx, by)
         gap, over = 1.2, 1.8
@@ -232,13 +256,15 @@ class Sheet:
         self.add(self.text(x0 + tb_w - 3, y0 + 6, sp.get("part_no", ""), 3.4, "end", bold=True))
         cells = [("MATERIAL", sh.get("material", sp.get("material", "—"))), ("SCALE", self.scale_label()),
                  ("SHEET", f"{sheet_no} / {sheet_count}"),
-                 ("UNITS", "mm"), ("DRAWN", sp.get("author", "")), ("DATE", sp.get("date", date.today().isoformat()))]
+                 ("UNITS", "in" if sp.get("units") == "in" else "mm"), ("DRAWN", sp.get("author", "")), ("DATE", sp.get("date", date.today().isoformat()))]
         for i, (k, val) in enumerate(cells):
             cx = x0 + 3 + (i % 3) * 50
             cy = y0 + 17.5 + (i // 3) * 9
             self.add(self.text(cx, cy, k, 1.8, color=HID))
             self.add(self.text(cx, cy + 4, str(val), 2.8))
-        self.add(self.text(m + 3, h - m - 3, "THIRD-ANGLE PROJECTION · DIMENSIONS IN mm · GENERAL TOL ±0.2 · "
+        units = "INCHES" if sp.get("units") == "in" else "mm"
+        tol = sp.get("tolerance", "±1/32" if sp.get("units") == "in" else "±0.2")
+        self.add(self.text(m + 3, h - m - 3, f"THIRD-ANGLE PROJECTION · DIMENSIONS IN {units} · GENERAL TOL {tol} · "
                            "GENERATED FROM SOLIDCRAFT DESIGN, DO NOT EDIT BY HAND", 2.0, color=HID))
         nx, ny = sh.get("notes_at", [m + 5, m + 8])
         for i, line in enumerate(sh.get("notes", [])):
@@ -273,6 +299,7 @@ def main(spec_path: str):
     env = {**os.environ, "SOURCE_DATE_EPOCH": "0"}  # reproducible PDFs: no creation timestamp churn in git
     with tempfile.TemporaryDirectory() as tmp:
         for n, sh in enumerate(spec["sheets"], 1):
+            sh["_bodies"] = spec.get("bodies", [])
             files = export_views(design, sh, Path(tmp))
             S = Sheet(spec, sh)
             S.image(base)
